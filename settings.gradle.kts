@@ -1,1 +1,1 @@
-rootProject.name = "Oblig"
+rootProject.name = "oblig"

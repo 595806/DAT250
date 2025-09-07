@@ -4,9 +4,9 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "DAT250"
+group = "dat250"
 version = "0.0.1-SNAPSHOT"
-description = "Oblig for DAT250"
+description = "Rest API project for DAT250"
 
 java {
 	toolchain {
