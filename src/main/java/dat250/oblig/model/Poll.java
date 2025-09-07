@@ -71,8 +71,8 @@ public class Poll {
         this.voteOptions.add(voteOption);
     }
 
-    public Collection<Vote> getVotes() {
-        return votes.values();
+    public HashMap<Long,Vote> getVotes() {
+        return votes;
     }
 
     public Vote getVote(long userId) {
