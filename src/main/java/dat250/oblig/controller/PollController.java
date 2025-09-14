@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.util.Collection;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/polls")
 public class PollController {
