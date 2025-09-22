@@ -194,11 +194,11 @@ class ObligApplicationTests {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 // Change Vote.class to whatever your endpoint returns (e.g., Poll.class or String.class)
-                .toEntity(Vote.class);
+                .toEntity(Poll.class);
 
         assertEquals(200, resp.getStatusCode().value());
-        assertEquals(resp.getBody().getUserId(), 1);
-        assertEquals(resp.getBody().getVoteOption().getCaption(), "INF234");
+        assertEquals(resp.getBody().getPollId(), 0);
+        assertEquals(resp.getBody().getVoteOptions().getLast().getCaption(), "INF234");
 
         System.out.println("Passed voteOnPoll");
     }
@@ -215,11 +215,11 @@ class ObligApplicationTests {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 // Change Vote.class to whatever your endpoint returns (e.g., Poll.class or String.class)
-                .toEntity(Vote.class);
+                .toEntity(Poll.class);
 
         assertEquals(200, resp.getStatusCode().value());
-        assertEquals(resp.getBody().getUserId(), 1);
-        assertEquals(resp.getBody().getVoteOption().getCaption(), "DAT250");
+        assertEquals(resp.getBody().getPollId(), 0);
+        assertEquals(resp.getBody().getVoteOptions().getLast().getCaption(), "INF234");
 
         System.out.println("Passed changeVote");
     }
