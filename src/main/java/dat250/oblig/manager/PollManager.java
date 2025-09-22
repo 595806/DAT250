@@ -7,14 +7,13 @@ import dat250.oblig.model.VoteOption;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class PollManager {
-    private HashMap<Long, Poll> polls =  new HashMap<>();
-    private HashMap<Long, User> users =  new HashMap<>();
+    private Map<Long, Poll> polls =  new LinkedHashMap<>();
+    private Map<Long, User> users =  new LinkedHashMap<>();
 
     private AtomicLong userId = new AtomicLong(0);
     private AtomicLong pollId = new AtomicLong(0);
@@ -24,8 +23,12 @@ public class PollManager {
     public User createUser(String username, String email) {
         User user = new User(username, email);
         user.setId(userId.getAndIncrement());
-        users.put(user.getId(),  user);
+        users.put(user.getId(), user);
         return user;
+    }
+
+    public User getUser(long id) {
+        return users.get(id);
     }
 
     public Collection<User> getUsers() {
@@ -41,7 +44,8 @@ public class PollManager {
     }
 
     public Poll startPoll(Long userId, String question, Instant validUntil) {
-        Poll poll = new Poll(question, Instant.now(), validUntil);
+        User user = getUser(userId);
+        Poll poll = user.createPoll(question);
         poll.setCreatorId(userId);
         poll.setPollId(pollId.getAndIncrement());
         polls.put(poll.getPollId(), poll);
@@ -49,13 +53,12 @@ public class PollManager {
     }
 
     public VoteOption addVoteOption(Long pollId, String caption) {
-        VoteOption voteOption = new VoteOption(caption);
-        polls.get(pollId).addVoteOptions(voteOption);
-        return voteOption;
+        return polls.get(pollId).addVoteOption(caption);
     }
 
     public Vote castVote(Long userId, Poll poll, VoteOption option) {
-        Vote vote = new Vote(Instant.now(), userId, option);
+        User user = getUser(userId);
+        Vote vote = user.voteFor(option);
         poll.addVote(vote);
         return vote;
     }

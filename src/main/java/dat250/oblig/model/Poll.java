@@ -66,9 +66,11 @@ public class Poll {
         return voteOptions;
     }
 
-    public void addVoteOptions(VoteOption voteOption) {
+    public VoteOption addVoteOption(String caption) {
+        VoteOption voteOption = new VoteOption(caption);
         voteOption.setPresentationOrder(voteOptions.size());
         this.voteOptions.add(voteOption);
+        return voteOption;
     }
 
     public HashMap<Long,Vote> getVotes() {
