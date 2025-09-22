@@ -1,21 +1,51 @@
 package dat250.oblig.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "users")
 public class User {
-    private String username;
-    private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Set<Poll> created;
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Poll> created = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Vote> votes = new ArrayList<>();
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
 
     public User() {}
 
     public User(String username, String email) {
         this.username = username;
         this.email = email;
-        this.created = new LinkedHashSet<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -34,14 +64,6 @@ public class User {
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Set<Poll> getCreated() {
         return created;
     }
@@ -51,10 +73,22 @@ public class User {
     }
 
     public Poll createPoll(String question) {
-        return new Poll(question, Instant.now(), Instant.now());
+        Poll p = new Poll(question, Instant.now(), Instant.now());
+        p.setCreator(this);
+        this.created.add(p);
+        return p;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
     }
 
     public Vote voteFor(VoteOption option) {
-        return new Vote(Instant.now(), id, option);
+        Vote v = new Vote(Instant.now(), this, option);
+        v.setPoll(option.getPoll());
+        votes.add(v);
+        //option.getPoll().addVote(v);
+        option.addVote(v);
+        return v;
     }
 }

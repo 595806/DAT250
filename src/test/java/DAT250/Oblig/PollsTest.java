@@ -77,8 +77,8 @@ public class PollsTest {
     @Test
     public void testVotes() {
         emf.runInTransaction(em -> {
-            Long vimVotes = em.createQuery("select count(v) from Vote v join v.votesOn as o join o.poll as p join p.creator u where u.email = :mail and o.presentationOrder = :order", Long.class).setParameter("mail", "alice@online.com").setParameter("order", 0).getSingleResult();
-            Long emacsVotes = em.createQuery("select count(v) from Vote v join v.votesOn as o join o.poll as p join p.creator u where u.email = :mail and o.presentationOrder = :order", Long.class).setParameter("mail", "alice@online.com").setParameter("order", 1).getSingleResult();
+            Long vimVotes = em.createQuery("select count(v) from Vote v join v.voteOption as o join o.poll as p join p.creator u where u.email = :mail and o.presentationOrder = :order", Long.class).setParameter("mail", "alice@online.com").setParameter("order", 0).getSingleResult();
+            Long emacsVotes = em.createQuery("select count(v) from Vote v join v.voteOption as o join o.poll as p join p.creator u where u.email = :mail and o.presentationOrder = :order", Long.class).setParameter("mail", "alice@online.com").setParameter("order", 1).getSingleResult();
             assertEquals(2, vimVotes);
             assertEquals(1, emacsVotes);
         });

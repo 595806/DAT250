@@ -2,6 +2,7 @@ package dat250.oblig.controller;
 
 import dat250.oblig.manager.PollManager;
 import dat250.oblig.model.Poll;
+import dat250.oblig.model.User;
 import dat250.oblig.model.Vote;
 import dat250.oblig.model.VoteOption;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,11 @@ public class VoteController {
     private PollManager pollManager;
 
     @GetMapping
-    public ResponseEntity<Collection<Vote>> getVote(@RequestParam Long userId,
-                                                    @RequestParam Long pollId) {
+    public ResponseEntity<Collection<Vote>> getVote(@RequestParam Long userId) {
 
         try {
-            Poll p =  pollManager.getPoll(pollId);
-            return ResponseEntity.ok(Collections.singleton(p.getVote(userId)));
+            User user =  pollManager.getUser(userId);
+            return ResponseEntity.ok(user.getVotes());
         } catch(Exception e) {
             return ResponseEntity.notFound().build();
         }
@@ -33,7 +33,7 @@ public class VoteController {
 
     @PostMapping
     public ResponseEntity<Poll> castVote(@RequestParam Long userId,
-                                         @RequestParam Long pollId,
+                                         @RequestParam Integer pollId,
                                          @RequestParam Integer voteOption) {
         try {
             Poll poll = pollManager.getPoll(pollId);

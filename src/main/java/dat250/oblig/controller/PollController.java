@@ -38,9 +38,9 @@ public class PollController {
     }
 
     @PostMapping("/{pollId}/options")
-    public ResponseEntity<VoteOption> addVoteOption(@PathVariable("pollId") Long pollId, @RequestParam String caption) {
+    public ResponseEntity<VoteOption> addVoteOption(@PathVariable("pollId") Integer pollId, @RequestParam String caption) {
         try {
-            VoteOption voteOption = pollManager.addVoteOption(Long.valueOf(pollId), caption);
+            VoteOption voteOption = pollManager.addVoteOption(pollId, caption);
             return ResponseEntity.ok(voteOption);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -48,7 +48,7 @@ public class PollController {
     }
 
     @PostMapping("/{pollId}/delete")
-    public ResponseEntity<VoteOption> addVoteOption(@PathVariable("pollId") Long pollId) {
+    public ResponseEntity<VoteOption> addVoteOption(@PathVariable("pollId") Integer pollId) {
         try {
             pollManager.deletePoll(pollId);
             return ResponseEntity.status(HttpStatus.OK).build();
