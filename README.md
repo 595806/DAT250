@@ -19,3 +19,7 @@ Inspected the table by querying in the console with entitymanger
 ![alt text](Images/queryExample.png)
 
 Other than that it went well, all tests passed after a bit of tweaking, did not test frontend, I expect there to be some errors due to changes to API endpoints
+
+# Expass 5
+No issues with installation and adding dependencies to java project
+Went well, did have some issues with using redis json.put. So went with hash instead. Java implementation went good, its in RedisTest.java used docs to find correct functions.
