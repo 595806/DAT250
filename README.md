@@ -23,3 +23,7 @@ Other than that it went well, all tests passed after a bit of tweaking, did not 
 # Expass 5
 No issues with installation and adding dependencies to java project
 Went well, did have some issues with using redis json.put. So went with hash instead. Java implementation went good, its in RedisTest.java used docs to find correct functions.
+
+# Expass 6
+Choose RabbitMQ, had some issues while installing tried to install on both wsl and windows. Switched to docker due to errors, running with docker went smooth no issues.
+Implemented a publisher and consumer, consumer listens for any new messages and adds it if it has a specific type in it. I choose to send messages as stringified json objects. No issues with implementation, tested RabbitMQ first before I started

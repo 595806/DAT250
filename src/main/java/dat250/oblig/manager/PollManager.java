@@ -20,7 +20,11 @@ public class PollManager {
     private AtomicLong userId = new AtomicLong(0);
     private AtomicLong pollId = new AtomicLong(0);
 
-    public PollManager() {}
+    private final RabbitPublisher rabbitPublisher = new RabbitPublisher();
+
+    public PollManager() {
+        createUser("Anonymous", "Anonymous@project.no");
+    }
 
     public User createUser(String username, String email) {
         User user = new User(username, email);
@@ -51,6 +55,7 @@ public class PollManager {
         poll.setId(pollId.getAndIncrement());
         poll.setCreator(user);
         polls.add(poll);
+        rabbitPublisher.createTopic("poll."+poll.getId());
         return poll;
     }
 
@@ -61,6 +66,7 @@ public class PollManager {
     public Vote castVote(Long userId, Poll poll, VoteOption option) {
         User user = getUser(userId);
         Vote vote = user.voteFor(option);
+        rabbitPublisher.publishVote("poll."+vote.getPoll().getId(), vote.getPoll().getId(), user.getId(), vote.getVoteOption().getId());
         return vote;
     }
 
