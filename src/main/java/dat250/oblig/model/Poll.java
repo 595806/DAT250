@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Table(name = "polls")
@@ -31,6 +32,8 @@ public class Poll {
     @OrderBy("presentationOrder ASC")
     private List<VoteOption> voteOptions = new ArrayList<>();
 
+    private AtomicLong voteOptionId = new AtomicLong(0);
+
     public Poll() {}
 
     public Poll(String question, Instant publishedAt, Instant validUntil) {
@@ -41,6 +44,10 @@ public class Poll {
 
     public Long getId() {
         return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getQuestion() {
@@ -86,6 +93,7 @@ public class Poll {
     public VoteOption addVoteOption(String caption) {
         VoteOption o = new VoteOption(caption);
         o.setPoll(this);
+        o.setId((long) getVoteOptions().size());
         o.setPresentationOrder(voteOptions.size());
         voteOptions.add(o);
         return o;

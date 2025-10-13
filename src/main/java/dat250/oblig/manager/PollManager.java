@@ -11,12 +11,14 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 @Component
 public class PollManager {
     private List<Poll> polls =  new ArrayList<>();
     private Map<Long, User> users =  new LinkedHashMap<>();
 
     private AtomicLong userId = new AtomicLong(0);
+    private AtomicLong pollId = new AtomicLong(0);
 
     public PollManager() {}
 
@@ -46,6 +48,7 @@ public class PollManager {
     public Poll startPoll(Long userId, String question, Instant validUntil) {
         User user = getUser(userId);
         Poll poll = user.createPoll(question);
+        poll.setId(pollId.getAndIncrement());
         poll.setCreator(user);
         polls.add(poll);
         return poll;

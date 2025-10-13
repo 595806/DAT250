@@ -54,7 +54,7 @@ Accept: application/json
 
 
 ### Cast Vote
-POST http://localhost:8080/api/vote?userId=1&pollId=0&voteOption=1
+POST http://localhost:8080/api/vote?userId=1&pollId=0&voteOption=0
 Content-Type: application/x-www-form-urlencoded
 
 
