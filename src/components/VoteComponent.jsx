@@ -34,7 +34,7 @@ function VoteComponent({username, userId, poll, setPoll}) {
                 <div key={v.id} className="answer">
                     <div className='caption'>{v.caption}</div>
                     <div className="controls">
-                        <input type="button" value="Vote" onClick={() => castVote(v.id)} style={{width: 80}}/>
+                        <input type="button" value="Vote" onClick={() => castVote(index)} style={{width: 80}}/>
                     </div>
                     <div className="votes">{v.votes.length} Votes</div>
                 </div>
