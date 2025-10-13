@@ -26,10 +26,10 @@ function CreatePollComponent({setPoll, setCreate, userId, enterPoll}) {
                 const result = await response.json();
                 console.log(result);
                 options.forEach(option => {
-                    publishOption(result.pollId, option.caption);
+                    publishOption(result.id, option.caption);
                     console.log(option);
                 });
-                enterPoll(result.pollId);
+                enterPoll(result.id);
                 setCreate(false);
             }
         } catch (error) {

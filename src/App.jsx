@@ -61,7 +61,8 @@ function App() {
         })
         if(response.ok) {
             const result = await response.json();
-            const poll = result.find(p => p.pollId == pollId);
+            const poll = result.find(p => p.id == pollId);
+            console.log(result, poll)
             if(poll != null) setPoll(poll);
             //exists = user != null;
         }
