@@ -1,38 +1,18 @@
 package dat250.oblig.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.*;
 
-@Entity
-@Table(name = "polls")
 public class Poll {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-
-    @Column(nullable = false)
     private String question;
-
-    @Column(nullable = false)
     private Instant publishedAt;
-
-    @Column(nullable = false)
     private Instant validUntil;
+    private Long pollId;
+    private Long creatorId;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", nullable = false)
-    @JsonIgnore
-    private User creator;
+    private final List<VoteOption> voteOptions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("presentationOrder ASC")
-    private List<VoteOption> voteOptions = new ArrayList<>();
-
-    private AtomicLong voteOptionId = new AtomicLong(0);
+    private final HashMap<Long,Vote> votes = new HashMap<>();
 
     public Poll() {}
 
@@ -40,14 +20,6 @@ public class Poll {
         this.question = question;
         this.publishedAt = publishedAt;
         this.validUntil = validUntil;
-    }
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
     }
 
     public String getQuestion() {
@@ -62,7 +34,7 @@ public class Poll {
         return publishedAt;
     }
 
-    public void setPublishedAt(Instant publishedAt) {
+    public void setPublishedAt() {
         this.publishedAt = publishedAt;
     }
 
@@ -74,28 +46,40 @@ public class Poll {
         this.validUntil = validUntil;
     }
 
-    public User getCreator() {
-        return creator;
+    public Long getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public void setCreatorId(Long creatorID) {
+        this.creatorId = creatorID;
+    }
+
+    public Long getPollId() {
+        return pollId;
+    }
+
+    public void setPollId(Long pollId) {
+        this.pollId = pollId;
     }
 
     public List<VoteOption> getVoteOptions() {
         return voteOptions;
     }
 
-    public void setVoteOptions(List<VoteOption> voteOptions) {
-        this.voteOptions = voteOptions;
+    public void addVoteOptions(VoteOption voteOption) {
+        voteOption.setPresentationOrder(voteOptions.size());
+        this.voteOptions.add(voteOption);
     }
 
-    public VoteOption addVoteOption(String caption) {
-        VoteOption o = new VoteOption(caption);
-        o.setPoll(this);
-        o.setId((long) getVoteOptions().size());
-        o.setPresentationOrder(voteOptions.size());
-        voteOptions.add(o);
-        return o;
+    public Collection<Vote> getVotes() {
+        return votes.values();
+    }
+
+    public Vote getVote(long userId) {
+        return votes.get(userId);
+    }
+
+    public void addVote(Vote vote) {
+        votes.put(vote.getUserId(), vote);
     }
 }

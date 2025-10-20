@@ -6,35 +6,26 @@ import dat250.oblig.model.Vote;
 import dat250.oblig.model.VoteOption;
 import org.springframework.stereotype.Component;
 
-import java.sql.Array;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
-
 
 @Component
 public class PollManager {
-    private List<Poll> polls =  new ArrayList<>();
-    private Map<Long, User> users =  new LinkedHashMap<>();
+    private HashMap<Long, Poll> polls =  new HashMap<>();
+    private HashMap<Long, User> users =  new HashMap<>();
 
     private AtomicLong userId = new AtomicLong(0);
     private AtomicLong pollId = new AtomicLong(0);
 
-    private final RabbitPublisher rabbitPublisher = new RabbitPublisher();
-
-    public PollManager() {
-        createUser("Anonymous", "Anonymous@project.no");
-    }
+    public PollManager() {}
 
     public User createUser(String username, String email) {
         User user = new User(username, email);
         user.setId(userId.getAndIncrement());
-        users.put(user.getId(), user);
+        users.put(user.getId(),  user);
         return user;
-    }
-
-    public User getUser(long id) {
-        return users.get(id);
     }
 
     public Collection<User> getUsers() {
@@ -42,35 +33,34 @@ public class PollManager {
     }
 
     public Collection<Poll> getPolls() {
-        return polls;
+        return polls.values();
     }
 
-    public Poll getPoll(Integer index) {
-        return polls.get(index);
+    public Poll getPoll(long pollId) {
+        return polls.get(pollId);
     }
 
     public Poll startPoll(Long userId, String question, Instant validUntil) {
-        User user = getUser(userId);
-        Poll poll = user.createPoll(question);
-        poll.setId(pollId.getAndIncrement());
-        poll.setCreator(user);
-        polls.add(poll);
-        rabbitPublisher.createTopic("poll."+poll.getId());
+        Poll poll = new Poll(question, Instant.now(), validUntil);
+        poll.setCreatorId(userId);
+        poll.setPollId(pollId.getAndIncrement());
+        polls.put(poll.getPollId(), poll);
         return poll;
     }
 
-    public VoteOption addVoteOption(Integer index, String caption) {
-        return polls.get(index).addVoteOption(caption);
+    public VoteOption addVoteOption(Long pollId, String caption) {
+        VoteOption voteOption = new VoteOption(caption);
+        polls.get(pollId).addVoteOptions(voteOption);
+        return voteOption;
     }
 
     public Vote castVote(Long userId, Poll poll, VoteOption option) {
-        User user = getUser(userId);
-        Vote vote = user.voteFor(option);
-        rabbitPublisher.publishVote("poll."+vote.getPoll().getId(), vote.getPoll().getId(), user.getId(), vote.getVoteOption().getId());
+        Vote vote = new Vote(Instant.now(), userId, option);
+        poll.addVote(vote);
         return vote;
     }
 
-    public void deletePoll(int index) {
-        polls.remove(index);
+    public void deletePoll(Long pollId) {
+        polls.remove(pollId);
     }
 }

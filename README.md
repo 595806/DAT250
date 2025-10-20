@@ -1,29 +1,5 @@
-# Expass 2
-## Technical Problems
-### Development Environment
-During the expass1 I did not encounter any problems, however when I started on expass2 I experienced issues with using Visual Studio code, this cause me to switch to InteliJ. The switch took a long time as I had issues with my Java and Gradle as I used WSL to install these. To fix this I had to have the project directory inside the WSL file structure, this fixed the gradle/java problem with InteliJ
-### Unsolved
-I did not prioritize solving task 6 and 7 due to time constraints caused by development environment issues.
-<br><br>
-# Solved
-The task 1-5 is solved and fully tested, I implemented automated testing with jupiter unit testing with RestClient.
-Manual testing was done with InteliJ's httpclient.
-
-# Expass 3
-See branch, expass3
-
-# Expass 4
-## Summary
-Did not have many issues except for missing getters/setters that caused problems. Spent longer than I expected doing the intergration. 
-Inspected the table by querying in the console with entitymanger
-![alt text](Images/queryExample.png)
-
-Other than that it went well, all tests passed after a bit of tweaking, did not test frontend, I expect there to be some errors due to changes to API endpoints
-
-# Expass 5
-No issues with installation and adding dependencies to java project
-Went well, did have some issues with using redis json.put. So went with hash instead. Java implementation went good, its in RedisTest.java used docs to find correct functions.
-
-# Expass 6
-Choose RabbitMQ, had some issues while installing tried to install on both wsl and windows. Switched to docker due to errors, running with docker went smooth no issues.
-Implemented a publisher and consumer, consumer listens for any new messages and adds it if it has a specific type in it. I choose to send messages as stringified json objects. No issues with implementation, tested RabbitMQ first before I started
+# Expass 7
+I added docker by looking at the template from lecture 15 about containers. 
+I choose to use my restAPI version from expass 2. No issues already had docker installed. 
+To run use ``docker build -t pollapp .`` when inside the project directory. And run it with ``docker run -d -p 8080:8080 pollapp``
+Used ``docker ps`` to see that it was running and tested it by visiting ``http://localhost:8080``
